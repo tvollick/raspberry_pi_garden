@@ -6,4 +6,10 @@
 
 # slim_garden_api #
 ###################
-slim_garden_api/vendor/ 
+slim_garden_api/vendor/
+
+
+
+#scotch_box#
+scotch_box/.vagrant/
+scotch_box/vendor/

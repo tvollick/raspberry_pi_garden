@@ -1,0 +1,25 @@
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  email TEXT(?),
+  created_at DATE,
+  updated_at DATE
+);
+
+CREATE TABLE pies (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  zip int,
+  created_at DATE,
+  updated_at DATE
+)
+
+CREATE TABLE zones (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  watered_daily BOOLEAN,
+  watering_time time,
+  watering_duration int,
+  created_at DATE,
+  updated_at DATE
+);

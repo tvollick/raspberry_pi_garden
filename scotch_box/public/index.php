@@ -1,4 +1,7 @@
 <?php
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+
 require '../vendor/autoload.php';
 
 // Models
@@ -115,7 +118,7 @@ $app->delete('/pi/{id}/', function ($request, $response, $args) {
   return $response->withStatus(200);
 });
 
-// Add Zone
+// CREATE Zone
 $app->post('/zone/', function ($request, $response, $args) {
   $data = $request->getParsedBody();
   $zone = new Zone();
@@ -124,8 +127,22 @@ $app->post('/zone/', function ($request, $response, $args) {
   return $response->withStatus(201)->getBody()->write($zone->toJson());
 });
 
+// READ ZONES
+$app->get('/zone/', function($request, $response) {
+
+  // THIS IS NOT WHAT WE WANT TO DO...
+  return $response->getBody()->write(Zone::all()->toJson());
+});
+
+$app->get('/zone/{id}', function ($request, $response, $args) {
+  $id = $args['id'];
+  $zone = Zone::find($id);
+  $response->getBody()->write($zone->toJson());
+  return $response;
+});
+
 // UPDATE Zone Settings
-$app->put('/zone/{id}', function ($request, $response, $args) {
+$app->put('/zone/{id}', function (Request $request, Response $response, $args) {
   $id = $args['id'];
   $data = $request->getParsedBody();
   $zone = Zone::find($id);
@@ -137,6 +154,14 @@ $app->put('/zone/{id}', function ($request, $response, $args) {
 
   $zone->save();
   return $response->getBody()->write($zone->toJson());
+});
+
+$app->delete('/zone/{id}', function ($request, $response, $args) {
+  $id = $args['id'];
+  $zone = Zone::find($id);
+  $zone->delete();
+
+  return $response->withStatus(200);
 });
 
 $app->run();
