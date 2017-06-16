@@ -1,26 +1,28 @@
 <?php
-require '../vendor/autoload.php';
 
-// Models
-require '../src/models/user.php';
-require '../src/models/zone.php';
-require '../src/models/pi.php';
+require __DIR__ '/../init/apps.php';
 
-require '../src/handlers/exceptions.php';
+$app->add(new \Slim\Middleware\HttpBasicAuthentication([
+  // "path" => "/api",
+  // "realm" => "Protected",
 
-$config = include('../src/config.php');
+  // "passthrough" => ["/api/token"], // excpeption to protected realm
 
-$app = new \Slim\App(['settings' => $config]);
+  "secure" => false, // require https
 
-$container = $app->getContainer();
-$capsule = new \Illuminate\Database\Capsule\Manager;
-$capsule->addConnection($container['settings']['db']);
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
-$capsule->getContainer()->singleton(
-  Illuminate\Contracts\Debug\ExceptionHandler::class,
-  App\Exceptions\Handler::class
-);
+  // these should be stored in environment
+  "users" => [
+    "root" => "$2y$10$BFMh24iePzd2ql6CjpOzJO9tNhRMOsdcs4LzcV.HVAuldtSRq.NHO",
+    "tyvollick" => "$2y$10$e9DBc7QPYlYn2LjnTjdpluXPOaclx9u.Y5wFNJ64vrraxGOw2vbku"
+  ],
+  "callback" => function ($request, $response, $arguments) {
+    // only called if auth is successful.
+    print_r($arguments);
+  }
+]));
+
+
+
 
 // CREATE user
 $app->post('/user/', function ($request, $response, $args) {
